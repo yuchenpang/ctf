@@ -108,7 +108,7 @@ namespace CTF_int {
     int64_t nflops = (int64_t)this->estimate_num_flops();
     int rank; MPI_Comm_rank(MPI_COMM_WORLD,&rank);
     if (rank == 0 && nflops < 0) {
-      std::cout << "CTF_int::estimated_flop_count becomes negative in contraction: " << CTF_int::estimated_flop_count << std::endl;
+      std::cout << "going to add a negative flops in contraction: " << nflops << std::endl;
     }
     add_estimated_flops(nflops);
     int64_t eflops = CTF::get_estimated_flops();
