@@ -111,8 +111,9 @@ namespace CTF_int {
       std::cout << "CTF_int::estimated_flop_count becomes negative in contraction: " << CTF_int::estimated_flop_count << std::endl;
     }
     add_estimated_flops(nflops);
-    if (rank == 0 && CTF_int::estimated_flop_count < 0) {
-      std::cout << "CTF_int::estimated_flop_count becomes negative in contraction: " << CTF_int::estimated_flop_count << std::endl;
+    int64_t eflops = CTF::get_estimated_flops();
+    if (rank == 0 && eflops < 0) {
+      std::cout << "CTF_int::estimated_flop_count becomes negative in contraction: " << eflops << std::endl;
       MPI_Finalize();
       std::exit(0);
     }

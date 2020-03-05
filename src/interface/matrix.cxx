@@ -799,8 +799,9 @@ namespace CTF {
       std::cout << "going to add a negative flops in svd: " << nflops << std::endl;
     }
     CTF_int::add_estimated_flops(nflops);
-    if (rank == 0 && CTF_int::estimated_flop_count < 0) {
-      std::cout << "CTF_int::estimated_flop_count becomes negative in svd: " << CTF_int::estimated_flop_count << std::endl;
+    int64_t eflops = CTF::get_estimated_flops();
+    if (rank == 0 && eflops < 0) {
+      std::cout << "CTF_int::estimated_flop_count becomes negative in svd: " << eflops << std::endl;
       MPI_Finalize();
       std::exit(0);
     }
