@@ -7,7 +7,8 @@
 #include "../shared/lapack_symbs.h"
 #include <stdlib.h>
 #include <algorithm>
-
+#include <iostream>
+#include <cstdlib>
 
 namespace CTF_int{
   struct int2
@@ -793,7 +794,17 @@ namespace CTF {
       nflops = 6.*(((int64_t)m)*n)*n+8.*(((int64_t)n)*n)*n;
     else
       nflops = 8.*(((int64_t)m)*n)*n+(4./3.)*(((int64_t)n)*n)*n;
+    int rank; MPI_Comm_rank(MPI_COMM_WORLD,&rank);
+    if (rank == 0 && nflops < 0) {
+      std::cout << "going to add a negative flops in svd: " << nflops << std::endl;
+    }
     CTF_int::add_estimated_flops(nflops);
+    if (rank == 0 && CTF_int::estimated_flop_count < 0) {
+      std::cout << "CTF_int::estimated_flop_count becomes negative in svd: " << CTF_int::estimated_flop_count << std::endl;
+      MPI_Finalize();
+      std::exit(0);
+    }
+
     dtype * s = (dtype*)CTF_int::alloc(sizeof(dtype)*k);
     CTF_SCALAPACK::pgesvd<dtype>('V', 'V', m, n, NULL, 1, 1, desca, NULL, NULL, 1, 1, descu, vt, 1, 1, descvt, &dlwork, -1, &info);  
     lwork = CTF_SCALAPACK::get_int_fromreal<dtype>(dlwork);

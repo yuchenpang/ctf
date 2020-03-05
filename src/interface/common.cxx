@@ -24,7 +24,10 @@ namespace CTF {
   }
 
   int64_t get_estimated_flops(){
-    std::cout << "CTF_int::estimated_flop_count: " << CTF_int::estimated_flop_count << std::endl;
+    int rank; MPI_Comm_rank(MPI_COMM_WORLD,&rank);
+    if (rank == 0) {
+      std::cout << "CTF_int::estimated_flop_count: " << CTF_int::estimated_flop_count << std::endl;
+    }
     return CTF_int::estimated_flop_count;
   }
 

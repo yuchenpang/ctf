@@ -21,6 +21,8 @@
 #include "../sparse_formats/csr.h"
 #include <cfloat>
 #include <limits>
+#include <cstdlib>
+
 
 namespace CTF_int {
 
@@ -103,7 +105,17 @@ namespace CTF_int {
   #endif
     print();
 #endif
-    add_estimated_flops((int64_t)this->estimate_num_flops());
+    int64_t nflops = (int64_t)this->estimate_num_flops();
+    int rank; MPI_Comm_rank(MPI_COMM_WORLD,&rank);
+    if (rank == 0 && nflops < 0) {
+      std::cout << "CTF_int::estimated_flop_count becomes negative in contraction: " << CTF_int::estimated_flop_count << std::endl;
+    }
+    add_estimated_flops(nflops);
+    if (rank == 0 && CTF_int::estimated_flop_count < 0) {
+      std::cout << "CTF_int::estimated_flop_count becomes negative in contraction: " << CTF_int::estimated_flop_count << std::endl;
+      MPI_Finalize();
+      std::exit(0);
+    }
     //if (A->wrld->cdt.cm == MPI_COMM_WORLD){
 //      update_all_models(A->wrld->cdt.cm);
     //}
