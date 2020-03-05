@@ -3,6 +3,7 @@
 #include "common.h"
 #include "../shared/util.h"
 #include <random>
+#include <iostream>
 
 #ifdef USE_MPI_CPP
 #define MPI_CXX_DOUBLE_COMPLEX MPI::DOUBLE_COMPLEX
@@ -23,6 +24,7 @@ namespace CTF {
   }
 
   int64_t get_estimated_flops(){
+    std::cout << "CTF_int::estimated_flop_count: " << CTF_int::estimated_flop_count << std::endl;
     return CTF_int::estimated_flop_count;
   }
 
