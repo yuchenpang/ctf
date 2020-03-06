@@ -112,11 +112,11 @@ namespace CTF_int {
     }
     add_estimated_flops(nflops);
     int64_t eflops = CTF::get_estimated_flops();
-    if (_rank == 0) {
+    if (rank == 0) {
       std::cout << "contraction: nflops=" << nflops << ", total=" << eflops << std::endl;
     }
     if (eflops < 0) {
-      if (_rank == 0)
+      if (rank == 0)
         std::cout << "CTF_int::estimated_flop_count becomes negative in contraction: " << eflops << std::endl;
       MPI_Finalize();
       std::exit(0);
