@@ -795,13 +795,14 @@ namespace CTF {
     else
       nflops = 8.*(((int64_t)m)*n)*n+(4./3.)*(((int64_t)n)*n)*n;
     int _rank; MPI_Comm_rank(MPI_COMM_WORLD,&_rank);
-    if (_rank == 0 && nflops < 0) {
-      std::cout << "going to add a negative flops in svd: " << nflops << std::endl;
-    }
     CTF_int::add_estimated_flops(nflops);
     int64_t eflops = CTF::get_estimated_flops();
-    if (_rank == 0 && eflops < 0) {
-      std::cout << "CTF_int::estimated_flop_count becomes negative in svd: " << eflops << std::endl;
+    if (_rank == 0) {
+      std::cout << "svd: m=" << m << ", n=" << n << ", nflops=" << nflops << ", total=" << eflops << std::endl;
+    }
+    if (eflops < 0) {
+      if (_rank == 0)
+        std::cout << "CTF_int::estimated_flop_count becomes negative in svd: " << eflops << std::endl;
       MPI_Finalize();
       std::exit(0);
     }
